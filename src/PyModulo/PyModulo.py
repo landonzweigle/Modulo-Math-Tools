@@ -13,7 +13,7 @@ def flipped_congruence(i, n):
 
 
 
-def eth_root(e, c, p):
+def eth_root(e, c, p, debug=False):
 	factors = slow_factor(p)
 	pTwo = p-1 if(len(factors)==0) else (factors[0]-1)*(factors[1]-1)
 	gcdRes = get_gcd_fast(e, pTwo)
@@ -21,7 +21,10 @@ def eth_root(e, c, p):
 		raise Exception("GCD(%s, %s)!=1"%(e, pTwo))
 	#Ensure we have the positive inverse:
 	eInverse = gcdRes["u"] % pTwo
-	
+
+	if(debug):
+		print("Factors: %s \npTwo: %s \neInverse: %s"%(factors,pTwo,eInverse))
+
 	return power_mod(c, eInverse, p)
 
 
