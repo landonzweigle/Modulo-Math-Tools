@@ -12,6 +12,22 @@ def flipped_congruence(i, n):
 	return i%(-i*n//abs(i))
 
 
+
+def eth_root(e, c, p, debug=False):
+	factors = slow_factor(p)
+	pTwo = p-1 if(len(factors)==0) else (factors[0]-1)*(factors[1]-1)
+	gcdRes = get_gcd_fast(e, pTwo)
+	if(gcdRes["GCD"]!=1):
+		raise Exception("GCD(%s, %s)!=1"%(e, pTwo))
+	#Ensure we have the positive inverse:
+	eInverse = gcdRes["u"] % pTwo
+
+	if(debug):
+		print("Factors: %s \npTwo: %s \neInverse: %s"%(factors,pTwo,eInverse))
+
+	return power_mod(c, eInverse, p)
+
+
 #algorithm described in HPS 1.12
 def get_gcd_fast(a,b):
 	u,g,x,y=1,a,0,b
