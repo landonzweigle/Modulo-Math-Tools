@@ -14,12 +14,13 @@ def flipped_congruence(i, n):
 
 
 def eth_root(e, c, p):
-	pMinus = p-1
-	gcdRes = get_gcd_fast(e, pMinus)
+	factors = slow_factor(p)
+	pTwo = p-1 if(len(factors)==0) else (factors[0]-1)*(factors[1]-1)
+	gcdRes = get_gcd_fast(e, pTwo)
 	if(gcdRes["GCD"]!=1):
-		raise Exception("GCD(%s, %s)!=1"%(e, pMinus))
+		raise Exception("GCD(%s, %s)!=1"%(e, pTwo))
 	#Ensure we have the positive inverse:
-	eInverse = gcdRes["u"] % pMinus
+	eInverse = gcdRes["u"] % pTwo
 	
 	return power_mod(c, eInverse, p)
 
