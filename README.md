@@ -8,7 +8,7 @@ Many of these algorithms compute very important information for use in cryptogra
 - [X] Implement Inverse
 - [X] Fast Powers
 - [X] Shanks' Algorithm
-- [ ] Downloaded package hosted on PyPi.
+- [ ] Downloadable package hosted on PyPi.
 - [ ] Creation of Latex Code
 - [ ] Intuitive GUI
 
