@@ -12,54 +12,64 @@ class RSA:
 			self.e=e
 
 	class PrivateInfo:
-		def __init__(self, p, q, d):
+		def __init__(self, p, q, d, lowerN=None):
 			self.p=p
 			self.q=q
 			self.d=d
+			self.lowerN = lowerN if lowerN else (p-1)*(q-1) 
 
-	def __init__(self, NDigitRange=(20,25), printDebug=False):
-		minDig, maxDig = NDigitRange
+		def get_key(self):
+			return self.p, self.q, self.d, self.lowerN
 
-		dnMin, dnMax = (ceil((minDig+1)/2), floor((maxDig+1)/2))
-		debug(dnMin, dnMax, output=printDebug)
+	def __init__(self, NDigitRange=(20,25), priInfo=None, pubInfo=None, printDebug=False):
+		if(pubInfo!=None and priInfo==None):
+			raise Exception("RSA was instantiated with public keys, but not private keys: Can not derive private keys from public keys alone.")
 
-		diff = dnMax-dnMin
-		debug("diff:", diff, output=printDebug)
+		if(not isinstance(priInfo, RSA.PrivateInfo)):
+			minDig, maxDig = NDigitRange
 
-		#the number of digits in the first number:
-		dp = randrange(dnMin,dnMax+diff+1)
-		p = rand_n_digit_prime(dp)
+			dnMin, dnMax = (ceil((minDig+1)/2), floor((maxDig+1)/2))
+			debug(dnMin, dnMax, output=printDebug)
 
-		#the number of digits in the second number:
-		dq =randrange(dnMin,dnMax*2-dp+1)
-		q = rand_n_digit_prime(dq)
+			diff = dnMax-dnMin
+			debug("diff:", diff, output=printDebug)
 
-		debug("p=%i digits (digits: %i=%i desired)"%(p, len(str(p)), dp), output=printDebug)
-		debug("q=%i digits (digits: %i=%i desired)"%(q, len(str(q)), dq), output=printDebug)
+			#the number of digits in the first number:
+			dp = randrange(dnMin,dnMax+diff+1)
+			p = rand_n_digit_prime(dp)
 
-		debug("**Found p and q (p:%i, q:%i)"%(p,q), output=printDebug)
+			#the number of digits in the second number:
+			dq =randrange(dnMin,dnMax*2-dp+1)
+			q = rand_n_digit_prime(dq)
 
-		N=p*q
+			lowerN = (p-1)*(q-1)
+
+			debug("p=%i digits (digits: %i=%i desired)"%(p, len(str(p)), dp), output=printDebug)
+			debug("q=%i digits (digits: %i=%i desired)"%(q, len(str(q)), dq), output=printDebug)
+			debug("**Found p and q (p:%i, q:%i)"%(p,q), output=printDebug)
+			debug("lowerN [(p-1)*(q-1)]=%i"%lowerN, output=printDebug)
+
+			#find d:
+			while((dInfo:=get_gcd_fast(d:=randrange(1,lowerN),lowerN))["GCD"]!=1):
+				pass
+			debug("found d=%i and :"%d, dInfo, output=printDebug)
+		else:
+			p, q, d, lowerN = priInfo.get_key()
+			dInfo = get_gcd_fast(d,lowerN)
+
+		N = p*q
 
 		debug("N=%i (digits=%i)"%(N, len(str(N))), output=printDebug)
+		debug("(p-1)*(q-1):", lowerN, output=printDebug)
 
-		barN = (p-1)*(q-1)
-		debug("(p-1)*(q-1):", barN, output=printDebug)
-		#find e:
-		#e = randrange(1,barN)
-		while((gcdE:=get_gcd_fast(e:=randrange(1,barN),barN))["GCD"]!=1):
-			pass
-
-		d = gcdE["u"]
+		e = dInfo["u"] % lowerN
 		debug("Found e:",e, output=printDebug)
-		debug("e info:",gcdE, output=printDebug)
-		debug("d (e inverse):", d, output=printDebug)
 
 		self.pubInfo = RSA.PublicInfo(N,e)
-		self.priInfo = RSA.PrivateInfo(p,q,d)
+		self.priInfo = RSA.PrivateInfo(p, q, d, lowerN)
 
 	def get_info(self):
-		return {"N": self.pubInfo.N, "e": self.pubInfo.e, "p": self.priInfo.p, "q":self.priInfo.q, "d": self.priInfo.d}
+		return {"N": self.pubInfo.N, "e": self.pubInfo.e, "p": self.priInfo.p, "q":self.priInfo.q, "d": self.priInfo.d, "lowerN":self.priInfo.lowerN}
 
 	def encrypt_message(self, m, encoder=lambda x: int(x, 36)):
 		mInt = encoder(m)
