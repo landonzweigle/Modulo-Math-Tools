@@ -27,7 +27,7 @@ class RSA:
 
 	def __init__(self, NDigitRange=(20,25), priInfo=None, pubInfo=None, printDebug=False):
 		if(isinstance(pubInfo,RSA.PublicInfo) and priInfo==None):
-			warnings.warn("Warning, RSA with only a public key can only encrypt messages!")
+			warnings.warn("Warning, RSA with only a public key can only encrypt messages (can't derive private keys from public keys)!")
 
 		if(not isinstance(priInfo, RSA.PrivateInfo)):
 			minDig, maxDig = NDigitRange
