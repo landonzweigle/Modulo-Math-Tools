@@ -3,7 +3,7 @@
 
 import sys
 from PyModulo.PyModulo import *
-from PyModulo.Utility import *
+#from PyModulo.Utility import *
 
 class setEntry:
 	intersec=[]

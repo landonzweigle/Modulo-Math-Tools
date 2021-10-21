@@ -8,6 +8,10 @@ Many of these algorithms compute very important information for use in cryptogra
 - [X] Implement Inverse
 - [X] Fast Powers
 - [X] Shanks' Algorithm
+- [X] RSA key generation, encryption, and decryption
+- [X] Random n-digit prime generation.
+- [X] Miller-Rabin composite test
+- [X] Seive of Eratosthenes.
 - [ ] Downloadable package hosted on PyPi.
 - [ ] Creation of Latex Code
 - [ ] Intuitive GUI
