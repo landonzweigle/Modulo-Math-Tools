@@ -59,15 +59,13 @@ def get_primes_SOE(n=100):
 
 
 def checkFirstPrimes(n):
-    return len(pList)!=len(list(takewhile(lambda x: n!=x, pList)))
+    return len(PRIME_LIST)!=len(list(takewhile(lambda x: n!=x, PRIME_LIST)))
 
 def slow_factor(n):
 	return [j for j in range(2, n//2) if n%j==0]
 
 def is_prime(n):
 	return len([False for j in range(2, n//2) if n%j==0])==0
-
-
 
 
 DEFAULT_FIRST_N_PRIMES=500
