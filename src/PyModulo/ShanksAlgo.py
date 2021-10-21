@@ -1,9 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
 from PyModulo.PyModulo import *
-#from PyModulo.Utility import *
 
 class setEntry:
 	intersec=[]
@@ -41,7 +39,7 @@ def shanks_algorithm(g, h, p):
 	n = 1 + int(N**(1/2))
 	#print("n:", n)
 
-	gInverse = find_inverse(g,p)
+	gInverse = inverse(g,p)
 	#print("g inverse = %s"%gInverse)
 
 	L = [setEntry(power_mod(g,(i+1),p),i) for i in range(n)]
