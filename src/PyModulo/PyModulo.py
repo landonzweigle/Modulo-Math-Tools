@@ -13,13 +13,13 @@ def flipped_congruence(i, n):
 	return i%(-i*n//abs(i))
 
 #yeah its that simple... Probably should enfore just using a%n but whatever.
-def abs_congruence(a, n):
+def get_congruence(a, n):
 	return a%n
 
 def eth_root(e, c, p, debug=False):
 	factors = slow_factor(p)
 	pTwo = p-1 if(len(factors)==0) else (factors[0]-1)*(factors[1]-1)
-	gcdRes = get_gcd_fast(e, pTwo)
+	gcdRes = gcd_info(e, pTwo)
 	if(gcdRes["GCD"]!=1):
 		raise Exception("GCD(%s, %s)!=1"%(e, pTwo))
 	#Ensure we have the positive inverse:
@@ -30,9 +30,8 @@ def eth_root(e, c, p, debug=False):
 
 	return power_mod(c, eInverse, p)
 
-
 #algorithm described in HPS 1.12
-def get_gcd_fast(a,b):
+def gcd_info(a,b):
 	u,g,x,y=1,a,0,b
 	while(y!=0):
 		q=g//y
@@ -91,14 +90,14 @@ def miller_rabin(p, nTrials=25):
 
 
 #return g^-1 mod p
-def find_inverse(g,p):
-	return get_gcd_fast(g,p)["u"]
+def inverse(g,p):
+	return gcd_info(g,p)["u"]
 
 def power_mod(g,e,p):
 	expBin = bin(e)[2:]
 
 	if(e<0):
-		gcdInfo = get_gcd_fast(g,p)
+		gcdInfo = gcd_info(g,p)
 		if(gcdInfo["GCD"]!=1):
 			raise Exception("e (%i) is negative, but g (%i) does not have an inverse mod p (%i)."%(e,g,p))
 		else:
@@ -113,10 +112,10 @@ def power_mod(g,e,p):
 
 	return _ret
 
-def get_multiplicative_order(a,p):
-    if(get_gcd_fast(a,p)["GCD"]!=1):
+def multiplicative_order(a,p):
+    if(gcd_info(a,p)["GCD"]!=1):
         return []
     return [i for i in range(1,p) if (a**i)%p==1][0]
 
 def is_primitive_root(g,p):
-    return get_multiplicative_order(g,p)==p-1
+    return multiplicative_order(g,p)==p-1
