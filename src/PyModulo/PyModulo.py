@@ -3,15 +3,13 @@
 
 from PyModulo.Utility import *
 
-def is_congruent(a,b, n):
-	return (a-b%n)==0
+def is_congruent(a, b, n):
+	return ((a-b)%n)==0
 
 #if i is negative returns i%n. 
 #if i is postitive returns i%-n.
 def flipped_congruence(i, n):
 	return i%(-i*n//abs(i))
-
-
 
 def eth_root(e, c, p, debug=False):
 	factors = slow_factor(p)
@@ -39,6 +37,53 @@ def get_gcd_fast(a,b):
 		x,y=s,t
 	v=(g-(a*u))//b
 	return {"GCD":g,"u":u,"v":v}
+
+def rand_n_digit_prime(n, amnt=1):
+	digMin = 10**(n-1)
+	digMax = 10**(n)-1
+
+	oddRange=(digMax-digMin)//2
+
+	failed=[]
+	primes=[]
+	foundPrimes=0
+	while(foundPrimes!=amnt):
+		#generate only odd numbers:
+		p = 2*randrange(0, oddRange+1)+digMin+1
+		if(p not in failed and miller_rabin(p)):
+				foundPrimes+=1
+				primes.append(p)
+		else:
+			failed.append(p)
+
+	return (primes if amnt>1 else primes[0]) if len(primes) > 0 else None
+
+def miller_rabin(p, nTrials=25):
+	q=p-1
+	k=0
+	while(q%2==0):
+		q>>=1
+		k+=1
+
+	if(q%2==0):
+		return False
+
+	for i in range(nTrials):
+		a = randrange(2, p)
+
+		if(is_congruent(power_mod(a, q, p),1,p)==False):
+			satisfies=True
+			for j in range(k):
+				aPow=power_mod(a,2**j * q, p)
+
+				if(is_congruent(aPow,-1,p)==True):
+					satisfies=False
+					break
+
+			if(satisfies):
+				return False
+	return True
+
 
 #return g^-1 mod p
 def find_inverse(g,p):
