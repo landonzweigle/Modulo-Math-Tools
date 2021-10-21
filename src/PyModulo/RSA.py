@@ -1,6 +1,7 @@
 from math import log, log10, floor, ceil
 from random import randrange
 from numpy import base_repr
+import warnings
 
 from PyModulo import *
 from PyModulo.Utility import *
@@ -10,6 +11,9 @@ class RSA:
 		def __init__(self, N, e):
 			self.N=N
 			self.e=e
+
+		def get_key(self):
+			return self.N, self.e
 
 	class PrivateInfo:
 		def __init__(self, p, q, d, lowerN=None):
@@ -22,8 +26,8 @@ class RSA:
 			return self.p, self.q, self.d, self.lowerN
 
 	def __init__(self, NDigitRange=(20,25), priInfo=None, pubInfo=None, printDebug=False):
-		if(pubInfo!=None and priInfo==None):
-			raise Exception("RSA was instantiated with public keys, but not private keys: Can not derive private keys from public keys alone.")
+		if(isinstance(pubInfo,RSA.PublicInfo) and priInfo==None):
+			warnings.warn("Warning, RSA with only a public key can only encrypt messages!")
 
 		if(not isinstance(priInfo, RSA.PrivateInfo)):
 			minDig, maxDig = NDigitRange
@@ -57,13 +61,16 @@ class RSA:
 			p, q, d, lowerN = priInfo.get_key()
 			dInfo = get_gcd_fast(d,lowerN)
 
-		N = p*q
+		if(not isinstance(pubInfo, RSA.PublicInfo)):
+			N = p*q
 
-		debug("N=%i (digits=%i)"%(N, len(str(N))), output=printDebug)
-		debug("(p-1)*(q-1):", lowerN, output=printDebug)
+			debug("N=%i (digits=%i)"%(N, len(str(N))), output=printDebug)
+			debug("(p-1)*(q-1):", lowerN, output=printDebug)
 
-		e = dInfo["u"] % lowerN
-		debug("Found e:",e, output=printDebug)
+			e = dInfo["u"] % lowerN
+			debug("Found e:",e, output=printDebug)
+		else:
+			N, e = pubInfo.get_key()
 
 		self.pubInfo = RSA.PublicInfo(N,e)
 		self.priInfo = RSA.PrivateInfo(p, q, d, lowerN)
@@ -73,11 +80,11 @@ class RSA:
 
 	def encrypt_message(self, m, encoder=lambda x: int(x, 36)):
 		mInt = encoder(m)
-		return power_mod(mInt, self.priInfo.d, self.pubInfo.N)
+		return power_mod(mInt, self.pubInfo.e, self.pubInfo.N)
 
-	def encrypt_message(self, m, decoder=lambda x: base_repr(x)):
+	def decrypt_message(self, m, decoder=lambda x: base_repr(x,base=36)):
 		mInt = power_mod(m, self.priInfo.d, self.pubInfo.N)
-		return decoder(mInt, 36)
+		return decoder(mInt)
 
 
 
