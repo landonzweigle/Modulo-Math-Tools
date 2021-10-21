@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyModulo.Utility import *
+import warnings
 
 def is_congruent(a, b, n):
 	return ((a-b)%n)==0
@@ -95,14 +96,21 @@ def find_inverse(g,p):
 
 def power_mod(g,e,p):
 	expBin = bin(e)[2:]
-	#print(e, expBin[:-1])
-	lastExp = g
 
+	if(e<0):
+		gcdInfo = get_gcd_fast(g,p)
+		if(gcdInfo["GCD"]!=1):
+			raise Exception("e (%i) is negative, but g (%i) does not have an inverse mod p (%i)."%(e,g,p))
+		else:
+			g = gcdInfo["u"]
+
+	lastExp = g
 	_ret = 1 if expBin[-1]=="0" else lastExp
 	for b in reversed(expBin[:-1]):
 		lastExp = (lastExp**2) % p
 		if(b=='1'):
 			_ret = (_ret * lastExp) % p
+
 	return _ret
 
 def get_multiplicative_order(a,p):
