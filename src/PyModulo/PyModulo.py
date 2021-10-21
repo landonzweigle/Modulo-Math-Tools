@@ -11,6 +11,10 @@ def is_congruent(a, b, n):
 def flipped_congruence(i, n):
 	return i%(-i*n//abs(i))
 
+#yeah its that simple... Probably should enfore just using a%n but whatever.
+def abs_congruence(a, n):
+	return a%n
+
 def eth_root(e, c, p, debug=False):
 	factors = slow_factor(p)
 	pTwo = p-1 if(len(factors)==0) else (factors[0]-1)*(factors[1]-1)
