@@ -58,7 +58,7 @@ def get_primes_SOE(n=100):
 	return [p for pList in digDict.values() for p in pList], digDict
 
 
-def checkFirstPrimes(n):
+def check_first_primes(n):
     return len(PRIME_LIST)!=len(list(takewhile(lambda x: n!=x, PRIME_LIST)))
 
 def slow_factor(n):
