@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyModulo.Utility import *
+from math import log
 import warnings
 
 def is_congruent(a, b, n):
@@ -41,6 +42,14 @@ def gcd_info(a,b):
 		x,y=s,t
 	v=(g-(a*u))//b
 	return {"GCD":g,"u":u,"v":v}
+
+#Compute the number of primes from 2 to x.
+#Divide it by x/ln(x).
+#Should approach 1 as x increase infinitly.
+def prime_number_theorem(x):
+	piX = len(get_primes_SOE(x)[0])
+	return piX/(x/log(x))
+
 
 def rand_n_digit_prime(n, amnt=1):
 	digMin = 10**(n-1)
