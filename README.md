@@ -12,6 +12,7 @@ Many of these algorithms compute very important information for use in cryptogra
 - [X] Random n-digit prime generation.
 - [X] Miller-Rabin composite test
 - [X] Seive of Eratosthenes.
+- [X] Pollard's p-1 factorization.
 - [ ] Downloadable package hosted on PyPi.
 - [ ] Creation of Latex Code
 - [ ] Intuitive GUI
