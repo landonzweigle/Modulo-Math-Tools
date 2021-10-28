@@ -31,6 +31,26 @@ def eth_root(e, c, p, debug=False):
 
 	return power_mod(c, eInverse, p)
 
+def factor(N, maxkBound=20, maxaBound=20, aStart=2, printLatex=False):
+	a = aStart
+
+	for i in range(maxaBound+1):
+		a = aStart+i
+		for j in range(2,maxkBound+1):
+			a = power_mod(a,j,N)
+			d = gcd_info(a-1,N)["GCD"]
+
+			if(printLatex!=None):
+				print("$%i^{%i!} - 1 \\equiv %i \\text{ mod %i}$ &  GCD($%i^{%i!} - 1$, N) = %i \\\\ \\hline"%(aStart+i,j,(a-1)%N, N, aStart+i,j, d) if printLatex else "%i^{%i!} - 1 = %i mod %i => GCD(a-1, N) = %i"%(aStart+i,j,(a-1)%N, N, d))
+
+			if(d%N==0):
+				break
+			elif( 1 < d and d < N):
+				return d, N//d
+			elif(j==maxkBound):
+				return
+
+
 #algorithm described in HPS 1.12
 def gcd_info(a,b):
 	u,g,x,y=1,a,0,b
