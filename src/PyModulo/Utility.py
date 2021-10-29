@@ -52,7 +52,7 @@ def get_primes_SOE(n=100, retFull=True, retDict=False):
 	for i,p in enumerate(firstN):
 		if(isPrime[i]):
 			if(retFull):
-				primes.add(p)
+				knownPrimes.append(p)
 			dp=len(str(p))
 
 			if(retDict):
@@ -62,7 +62,12 @@ def get_primes_SOE(n=100, retFull=True, retDict=False):
 
 				isPrime[pTest-2]=False
 
-	return knownPrimes, digDict
+	if(retFull and retDict):
+		return knownPrimes, digDict
+	elif(retFull):
+		return knownPrimes
+	elif(retDict):
+		return digDict
 
 
 def check_first_primes(n):
@@ -76,4 +81,4 @@ def is_prime(n):
 
 
 DEFAULT_FIRST_N_PRIMES=500
-PRIME_LIST, PRIME_DIGITS = get_primes_SOE(DEFAULT_FIRST_N_PRIMES)
+PRIME_LIST, PRIME_DIGITS = get_primes_SOE(DEFAULT_FIRST_N_PRIMES, retDict=True)
