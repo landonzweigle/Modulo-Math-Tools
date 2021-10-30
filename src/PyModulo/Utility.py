@@ -39,23 +39,35 @@ def get_primes_naive(n=100):
 
 #Implements the Sieve of Eratosthenes.
 #returns a list of primes, and a dict, where the key is the number of digits and the value is a list of primes with that many digits.
-def get_primes_SOE(n=100):
+def get_primes_SOE(n=100, retFull=True, retDict=False):
+	if(not retFull and not retDict):
+		raise Exception("get_primes_SOE argument error: one of retFull or retDict must be true. If both are false nothing will be returned.")
+
 	firstN = range(2,n+1)
 	isPrime=[True]*(n-1)
 
 	digDict={}
+	knownPrimes=[]
 
 	for i,p in enumerate(firstN):
 		if(isPrime[i]):
+			if(retFull):
+				knownPrimes.append(p)
 			dp=len(str(p))
 
-			digDict[dp] = digDict.get(dp,[])+[p]
+			if(retDict):
+				digDict[dp] = digDict.get(dp,[])+[p]
 
 			for pTest in range(2*p,n+1,p):
 
 				isPrime[pTest-2]=False
 
-	return [p for pList in digDict.values() for p in pList], digDict
+	if(retFull and retDict):
+		return knownPrimes, digDict
+	elif(retFull):
+		return knownPrimes
+	elif(retDict):
+		return digDict
 
 
 def check_first_primes(n):
@@ -69,4 +81,4 @@ def is_prime(n):
 
 
 DEFAULT_FIRST_N_PRIMES=500
-PRIME_LIST, PRIME_DIGITS = get_primes_SOE(DEFAULT_FIRST_N_PRIMES)
+PRIME_LIST, PRIME_DIGITS = get_primes_SOE(DEFAULT_FIRST_N_PRIMES, retDict=True)

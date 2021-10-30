@@ -67,7 +67,7 @@ def gcd_info(a,b):
 #Divide it by x/ln(x).
 #Should approach 1 as x increase infinitly.
 def prime_number_theorem(x):
-	piX = len(get_primes_SOE(x)[0])
+	piX = len(get_primes_SOE(x))
 	return piX/(x/log(x))
 
 
