@@ -58,7 +58,7 @@ def get_primes_SOE(n=100, retFull=True, retDict=False):
 			if(retDict):
 				digDict[dp] = digDict.get(dp,[])+[p]
 
-			for pTest in range(2*p,n+1,p):
+			for pTest in range((i+2)*p,n+1,p):
 
 				isPrime[pTest-2]=False
 
