@@ -3,9 +3,9 @@
 
 from itertools import takewhile
 from random import randrange
-from math import floor, log10
+from math import floor, log10, sqrt
 from enum import Enum
-
+from collections import defaultdict
 
 class COLORS(Enum):
     RED="\033[31m"
@@ -43,31 +43,26 @@ def get_primes_SOE(n=100, retFull=True, retDict=False):
 	if(not retFull and not retDict):
 		raise Exception("get_primes_SOE argument error: one of retFull or retDict must be true. If both are false nothing will be returned.")
 
-	firstN = range(2,n+1)
+	firstN = range(2,int(sqrt(n))+1)
 	isPrime=[True]*(n-1)
-
-	digDict={}
-	knownPrimes=[]
 
 	for i,p in enumerate(firstN):
 		if(isPrime[i]):
-			if(retFull):
-				knownPrimes.append(p)
-			dp=len(str(p))
-
-			if(retDict):
-				digDict[dp] = digDict.get(dp,[])+[p]
-
-			for pTest in range(2*p,n+1,p):
-
+			for pTest in range(p**2,n+1,p):
 				isPrime[pTest-2]=False
 
-	if(retFull and retDict):
-		return knownPrimes, digDict
+	primes = [i+2 for i, prime in enumerate(isPrime) if prime]
+
+	if(retDict):
+		digDict = defaultdict(int)
+		for p in primes:
+			digDict[len(str(p))]+=1
+		if(retFull):
+			return primes, digDict
+		else:
+			return digDict
 	elif(retFull):
-		return knownPrimes
-	elif(retDict):
-		return digDict
+		return primes
 
 
 def check_first_primes(n):
